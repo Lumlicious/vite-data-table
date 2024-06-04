@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface ITableData {
   name: string;
@@ -14,6 +14,7 @@ export interface IDataTableProps {
 const DataTable = ({ data }: IDataTableProps) => {
   // Using Set for quicker lookup & easier delete
   const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+  const [selectAll, setSelectAll] = useState<boolean | 'indeterminate'>(false);
 
   const handleRowSelect = (index: number) => {
     const newSelectedRows = new Set(selectedRows);
@@ -25,6 +26,56 @@ const DataTable = ({ data }: IDataTableProps) => {
     setSelectedRows(newSelectedRows);
   };
 
+  const handleSelectAll = () => {
+    if (selectAll === true) {
+      setSelectedRows(new Set());
+      setSelectAll(false);
+    } else if (selectAll === false) {
+      selectAllRows();
+    } else {
+      const selectableCount = data.filter((item) => {
+        return item.status === 'available';
+      }).length;
+
+      // When in indeterminate state, if not all rows are selectable, remove all checks.
+      if (selectableCount < data.length) {
+        setSelectedRows(new Set());
+        setSelectAll(false);
+      } else {
+        selectAllRows();
+      }
+    }
+  };
+
+  const selectAllRows = () => {
+    setSelectAll(true);
+    const newSelectedRows = new Set(selectedRows);
+
+    data.forEach((item, index) => {
+      if (item.status === 'available') {
+        newSelectedRows.add(index);
+      }
+    });
+
+    setSelectedRows(newSelectedRows);
+  };
+
+  useEffect(() => {
+    if (selectedRows.size === data.length) {
+      setSelectAll(true);
+    } else if (selectedRows.size > 0 && selectedRows.size < data.length) {
+      setSelectAll('indeterminate');
+    } else {
+      setSelectAll(false);
+    }
+  }, [selectAll, selectedRows, data]);
+
+  const getSelectedCount = () => {
+    return selectedRows.size === 0
+      ? 'None Selected'
+      : `Selected ${selectedRows.size}`;
+  };
+
   return (
     <div className="data-table-container">
       <div className="action-bar">
@@ -32,11 +83,19 @@ const DataTable = ({ data }: IDataTableProps) => {
           <input
             id="select-all"
             className="action-bar__checkbox"
+            data-testid="select-all"
             type="checkbox"
             name="select-all"
+            checked={selectAll === true}
+            onChange={handleSelectAll}
+            ref={(el) => {
+              if (el) {
+                el.indeterminate = selectAll === 'indeterminate';
+              }
+            }}
           />
         </label>
-        <div className="action-bar__selected">Selected {selectedRows.size}</div>
+        <div className="action-bar__selected">{getSelectedCount()}</div>
         <button className="action-bar__button" type="button">
           <div className="action-bar__button-icon">
             <svg
