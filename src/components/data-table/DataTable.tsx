@@ -1,3 +1,5 @@
+import { useEffect, useRef, useState } from 'react';
+
 export interface ITableData {
   name: string;
   device: string;
@@ -10,6 +12,19 @@ export interface IDataTableProps {
 }
 
 const DataTable = ({ data }: IDataTableProps) => {
+  // Using Set for quicker lookup & easier delete
+  const [selectedRows, setSelectedRows] = useState<Set<number>>(new Set());
+
+  const handleRowSelect = (index: number) => {
+    const newSelectedRows = new Set(selectedRows);
+    if (newSelectedRows.has(index)) {
+      newSelectedRows.delete(index);
+    } else {
+      newSelectedRows.add(index);
+    }
+    setSelectedRows(newSelectedRows);
+  };
+
   return (
     <div className="data-table-container">
       <div className="action-bar">
@@ -21,7 +36,7 @@ const DataTable = ({ data }: IDataTableProps) => {
             name="select-all"
           />
         </label>
-        <div className="action-bar__selected">Selected 2</div>
+        <div className="action-bar__selected">Selected {selectedRows.size}</div>
         <button className="action-bar__button" type="button">
           <div className="action-bar__button-icon">
             <svg
@@ -48,14 +63,19 @@ const DataTable = ({ data }: IDataTableProps) => {
           </tr>
         </thead>
         <tbody className="data-table__body">
-          {data.map((item) => (
-            <tr className="data-table__body-row">
+          {data.map((item, index) => (
+            <tr
+              className={`data-table__body-row ${selectedRows.has(index) && 'data-table__body-row--selected'}`}
+            >
               <td className="data-table__body-data">
                 <label htmlFor="select-1">
                   <input
                     className="data-table__checkbox"
                     type="checkbox"
                     name="select-1"
+                    disabled={item.status !== 'available'}
+                    onChange={() => handleRowSelect(index)}
+                    checked={selectedRows.has(index)}
                   />
                 </label>
               </td>
@@ -63,9 +83,11 @@ const DataTable = ({ data }: IDataTableProps) => {
               <td className="data-table__body-data">{item.device}</td>
               <td className="data-table__body-data">{item.path}</td>
               <td className="data-table__body-data data-table__body-data--available">
-                <div className="dot"></div>
+                {item.status === 'available' && <div className="dot"></div>}
               </td>
-              <td className="data-table__body-data">{item.status}</td>
+              <td className="data-table__body-data">
+                {item.status[0].toUpperCase() + item.status.slice(1)}
+              </td>
             </tr>
           ))}
         </tbody>
