@@ -1,0 +1,94 @@
+.data-table-container {
+  border: 1px solid var(--blue-gray-300);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: auto;
+
+  input[type='checkbox'] {
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 1px solid var(--blue-gray-300);
+  }
+}
+
+.data-table {
+  border-collapse: collapse;
+  background-color: var(--white);
+  width: 100%;
+  min-width: 400px;
+
+  &__head-row {
+    height: 3rem;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--blue-gray-300);
+  }
+
+  &__head-data {
+    padding: 1rem 1.2rem;
+    font-weight: normal;
+    text-align: left;
+  }
+
+  &__body-row {
+    border-bottom: 1px solid var(--blue-gray-300);
+    cursor: pointer;
+
+    &:hover {
+      background-color: var(--blue-gray-100);
+    }
+
+    &:last-of-type {
+      border-bottom: none;
+    }
+
+    &--selected {
+      background-color: var(--blue-gray-200);
+    }
+  }
+
+  &__body-data {
+    padding: 0.8rem 1.2rem;
+
+    &--available {
+      padding: 0;
+      text-align: right;
+    }
+  }
+}
+
+.action-bar {
+  display: flex;
+  align-items: center;
+  height: 4rem;
+  border-bottom: 1px solid var(--blue-gray-300);
+  font-size: 1.3rem;
+  background-color: var(--white);
+
+  &__checkbox {
+    margin: 1rem 1.2rem;
+  }
+
+  &__button {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    margin: 0 1rem 0 4rem;
+    display: flex;
+    align-items: center;
+
+    &:hover {
+      color: var(--blue);
+    }
+  }
+
+  &__button-icon {
+    padding-right: 0.5rem;
+  }
+}
+
+.dot {
+  height: 1.2rem;
+  width: 1.2rem;
+  background-color: var(--green);
+  border-radius: 50%;
+  display: inline-block;
+}
