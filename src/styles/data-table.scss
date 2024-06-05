@@ -53,6 +53,14 @@
       text-align: right;
     }
   }
+
+  &__checkbox {
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+    }
+  }
 }
 
 .action-bar {
@@ -65,6 +73,7 @@
 
   &__checkbox {
     margin: 1rem 1.2rem;
+    cursor: pointer;
   }
 
   &__button {
@@ -78,10 +87,18 @@
     &:hover {
       color: var(--blue);
     }
+
+    &:disabled {
+      pointer-events: none;
+      color: var(--blue-gray-300);
+      fill: var(--blue-gray-300);
+    }
   }
 
   &__button-icon {
     padding-right: 0.5rem;
+    height: 2rem;
+    width: 2rem;
   }
 }
 

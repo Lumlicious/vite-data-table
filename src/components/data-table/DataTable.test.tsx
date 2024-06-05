@@ -1,5 +1,5 @@
-import { describe, it, expect, test } from 'vitest';
-import { fireEvent, getByTestId, render, screen } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
+import { fireEvent, render, screen } from '@testing-library/react';
 import DataTable, { ITableData } from './DataTable';
 
 describe('render', () => {
@@ -171,5 +171,53 @@ describe('Select All', () => {
 
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
+  });
+});
+
+describe('download', () => {
+  const data: ITableData[] = [
+    {
+      name: 'smss.exe',
+      device: 'Mario',
+      path: '\\Device\\HarddiskVolume2\\Windows\\System32\\smss.exe',
+      status: 'available',
+    },
+    {
+      name: 'netsh.exe',
+      device: 'Luigi',
+      path: '\\Device\\HarddiskVolume2\\Windows\\System32\\netsh.exe',
+      status: 'available',
+    },
+  ];
+
+  it('should be disabled if no rows are selected', () => {
+    render(<DataTable data={data} />);
+    const downloadButton = screen.getByRole('button');
+
+    expect(downloadButton).toHaveAttribute('disabled');
+  });
+
+  it('should be enabled if at least 1 row is selected', async () => {
+    render(<DataTable data={data} />);
+    const checkboxes = screen.getAllByRole('checkbox');
+    const downloadButton = screen.getByRole('button');
+
+    await fireEvent.click(checkboxes[1]);
+
+    expect(downloadButton).not.toHaveAttribute('disabled');
+  });
+
+  it('should display alert with device and path for all selected when clicked', async () => {
+    const alertMock = vi.spyOn(window, 'alert');
+    render(<DataTable data={data} />);
+    const checkboxes = screen.getAllByRole('checkbox');
+    const downloadButton = screen.getByRole('button');
+
+    await fireEvent.click(checkboxes[1]);
+    await fireEvent.click(checkboxes[2]);
+
+    await fireEvent.click(downloadButton);
+
+    expect(alertMock).toHaveBeenCalledTimes(1);
   });
 });
