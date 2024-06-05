@@ -1,4 +1,7 @@
-import DataTable, { ITableData } from './components/data-table/DataTable';
+import DataTable, {
+  IHeaderCell,
+  ITableData,
+} from './components/data-table/DataTable';
 
 const data: ITableData[] = [
   {
@@ -44,10 +47,37 @@ const data: ITableData[] = [
   },
 ];
 
+const header: IHeaderCell[] = [
+  {
+    id: 'checkbox',
+    label: '',
+  },
+  {
+    id: 'name',
+    label: 'Name',
+  },
+  {
+    id: 'device',
+    label: 'Device',
+  },
+  {
+    id: 'path',
+    label: 'Path',
+  },
+  {
+    id: 'status-icon',
+    label: '',
+  },
+  {
+    id: 'status',
+    label: 'Status',
+  },
+];
+
 function App() {
   return (
     <div className="container">
-      <DataTable data={data} />
+      <DataTable data={data} header={header} />
     </div>
   );
 }
