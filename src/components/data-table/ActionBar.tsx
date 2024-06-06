@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { ITableData, Status } from './DataTable';
+import { ITableData } from './DataTable';
 
 export interface IDataActionBarProps {
   data: ITableData[];
-  setSelectedRows: any;
-  selectedRows: any;
+  setSelectedRows: React.Dispatch<React.SetStateAction<Set<number>>>;
+  selectedRows: Set<number>;
 }
 
 export const ActionBar = ({
@@ -22,7 +22,7 @@ export const ActionBar = ({
       selectAllRows();
     } else {
       const selectableCount = data.filter((item) => {
-        return item.status === Status.AVAILABLE;
+        return item.status === 'available';
       }).length;
 
       // When in indeterminate state, if not all rows are selectable, remove all checks.
@@ -40,7 +40,7 @@ export const ActionBar = ({
     const newSelectedRows = new Set(selectedRows);
 
     data.forEach((item, index) => {
-      if (item.status === Status.AVAILABLE) {
+      if (item.status === 'available') {
         newSelectedRows.add(index);
       }
     });

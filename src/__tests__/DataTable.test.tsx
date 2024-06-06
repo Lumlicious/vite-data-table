@@ -54,7 +54,7 @@ describe('render', () => {
 });
 
 describe('Row selection', () => {
-  it('should increment/decrement the counter when a row is checked/unchecked', async () => {
+  it('should increment/decrement the counter when a row is checked/unchecked', () => {
     const data: ITableData[] = [
       {
         name: 'netsh.exe',
@@ -64,25 +64,21 @@ describe('Row selection', () => {
       },
     ];
     const { container } = render(<DataTable data={data} header={header} />);
-    const counter = await container.getElementsByClassName(
-      'action-bar__selected'
-    );
-    const checkboxes = await container.getElementsByClassName(
-      'data-table__checkbox'
-    );
+    const counter = container.getElementsByClassName('action-bar__selected');
+    const checkboxes = container.getElementsByClassName('data-table__checkbox');
 
     expect(counter[0].textContent).toBe('None Selected');
 
-    await fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[0]);
 
     expect(counter[0].textContent).toBe('Selected 1');
 
-    await fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[0]);
 
     expect(counter[0].textContent).toBe('None Selected');
   });
 
-  it('should be disabled for rows that are not of status available', async () => {
+  it('should be disabled for rows that are not of status available', () => {
     const data: ITableData[] = [
       {
         name: 'smss.exe',
@@ -121,89 +117,89 @@ describe('Select All', () => {
     },
   ];
 
-  it('should be unselected if no items are selected', async () => {
+  it('should be unselected if no items are selected', () => {
     const { getByTestId } = render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = getByTestId('select-all');
 
-    for (let checkbox of checkboxes) {
+    for (const checkbox of checkboxes) {
       expect(checkbox).not.toBeChecked();
     }
 
     expect(selectAll).not.toBeChecked();
   });
 
-  it('should be indeterminate if some of the checkboxes are checked', async () => {
+  it('should be indeterminate if some of the checkboxes are checked', () => {
     render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
     expect(selectAll.indeterminate).toBe(false);
 
-    await fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[1]);
 
     expect(selectAll.indeterminate).toBe(true);
   });
 
-  it('should be checked if all inputs are selected', async () => {
+  it('should be checked if all inputs are selected', () => {
     render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
     expect(selectAll.checked).toBe(false);
 
-    await fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[1]);
 
     expect(selectAll.checked).toBe(false);
 
-    await fireEvent.click(checkboxes[2]);
+    fireEvent.click(checkboxes[2]);
 
     expect(selectAll.checked).toBe(true);
   });
 
-  it('should select all items if none are selected when clicked', async () => {
+  it('should select all items if none are selected when clicked', () => {
     render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
-    await fireEvent.click(selectAll);
+    fireEvent.click(selectAll);
 
-    for (let checkbox of checkboxes) {
+    for (const checkbox of checkboxes) {
       expect(checkbox).toBeChecked();
     }
   });
 
-  it('should select all items if some are selected when clicked', async () => {
+  it('should select all items if some are selected when clicked', () => {
     render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
-    await fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[1]);
 
-    await fireEvent.click(selectAll);
+    fireEvent.click(selectAll);
 
-    for (let checkbox of checkboxes) {
+    for (const checkbox of checkboxes) {
       expect(checkbox).toBeChecked();
     }
   });
 
-  it('should de-select all items if all are currently selected when clicked', async () => {
+  it('should de-select all items if all are currently selected when clicked', () => {
     render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
-    await fireEvent.click(checkboxes[1]);
-    await fireEvent.click(checkboxes[2]);
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
 
     expect(selectAll).toBeChecked();
 
-    await fireEvent.click(checkboxes[0]);
+    fireEvent.click(checkboxes[0]);
 
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
   });
 
-  it('should remove all selections if clicked in indeterminate mode and not all rows are selectable', async () => {
+  it('should remove all selections if clicked in indeterminate mode and not all rows are selectable', () => {
     const data: ITableData[] = [
       {
         name: 'smss.exe',
@@ -225,11 +221,11 @@ describe('Select All', () => {
 
     expect(selectAll.indeterminate).toBe(false);
 
-    await fireEvent.click(selectAll);
+    fireEvent.click(selectAll);
 
     expect(selectAll.indeterminate).toBe(true);
 
-    await fireEvent.click(selectAll);
+    fireEvent.click(selectAll);
 
     expect(selectAll.indeterminate).toBe(false);
 
@@ -261,26 +257,26 @@ describe('download', () => {
     expect(downloadButton).toHaveAttribute('disabled');
   });
 
-  it('should be enabled if at least 1 row is selected', async () => {
+  it('should be enabled if at least 1 row is selected', () => {
     render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const downloadButton = screen.getByRole('button');
 
-    await fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[1]);
 
     expect(downloadButton).not.toHaveAttribute('disabled');
   });
 
-  it('should display alert with device and path for all selected when clicked', async () => {
+  it('should display alert with device and path for all selected when clicked', () => {
     const alertMock = vi.spyOn(window, 'alert');
     render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const downloadButton = screen.getByRole('button');
 
-    await fireEvent.click(checkboxes[1]);
-    await fireEvent.click(checkboxes[2]);
+    fireEvent.click(checkboxes[1]);
+    fireEvent.click(checkboxes[2]);
 
-    await fireEvent.click(downloadButton);
+    fireEvent.click(downloadButton);
 
     expect(alertMock).toHaveBeenCalledTimes(1);
   });

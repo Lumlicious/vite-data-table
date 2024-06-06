@@ -1,16 +1,11 @@
 import { useState } from 'react';
 import ActionBar from './ActionBar';
 
-export enum Status {
-  AVAILABLE = 'available',
-  SCHEDULED = 'scheduled',
-}
-
 export interface ITableData {
   name: string;
   device: string;
   path: string;
-  status: string;
+  status: 'available' | 'scheduled';
 }
 
 export interface IDataTableProps {
@@ -66,7 +61,7 @@ const DataTable = ({ data, header }: IDataTableProps) => {
                     className="data-table__checkbox"
                     type="checkbox"
                     name={`select-${item.name}`}
-                    disabled={item.status !== Status.AVAILABLE}
+                    disabled={item.status !== 'available'}
                     onChange={() => handleRowSelect(index)}
                     checked={selectedRows.has(index)}
                   />
