@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "format": "prettier --write ./src",
     "test": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "dev-debug": "vite --port 4000"
   },
   "dependencies": {
     "react": "^18.2.0",

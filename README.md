@@ -1,30 +1,32 @@
-# React + TypeScript + Vite
+# Data Table Challenge
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Tech Stack
 
-Currently, two official plugins are available:
+- Vite
+- React (18.2)
+- Typescript
+- SCSS
+- Vitest / React Testing Library
+- V8 coverage (100% for the component)
+- eslint (js, react, jsx, typescript rules)
+- Prettier
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Instructions
 
-## Expanding the ESLint configuration
+Clone and use `npm install` to install dependencies
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+To run dev mode:
+`npm run dev`
 
-- Configure the top-level `parserOptions` property like this:
+To run tests:
+`npm run test`
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+To run coverage:
+`npm run coverage`
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+## Notes
+
+- The dataset lacks unique identifiers for individual items, necessitating the use of array indices for item tracking. This approach is suboptimal as it introduces the risk of mismatches between selected items and the actual dataset, especially if the dataset is dynamically updated.
+- Per the requirements, only items with an 'available' status can be downloaded. Consequently, checkboxes are disabled for rows corresponding to non-available items. If the dataset contains any non-available items, toggling the 'select all' functionality will render the checkbox in an indeterminate state.
+- Vite was selected as the build tool due to its provision of a development environment closely resembling vanilla React, filling the gap left by the deprecation of create-react-app. Vite's ecosystem includes a nice built-in testing library as well.
+- The specifications mention "reusable" components, though it was unclear if this implied support for multiple data schemas. The current implementation is restricted to a single data schema, but it is designed for straightforward refactoring to support multiple schemas if needed.

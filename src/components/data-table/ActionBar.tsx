@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ITableData } from './DataTable';
+import { ITableData, Status } from './DataTable';
 
 export interface IDataActionBarProps {
   data: ITableData[];
@@ -22,7 +22,7 @@ export const ActionBar = ({
       selectAllRows();
     } else {
       const selectableCount = data.filter((item) => {
-        return item.status === 'available';
+        return item.status === Status.AVAILABLE;
       }).length;
 
       // When in indeterminate state, if not all rows are selectable, remove all checks.
@@ -40,7 +40,7 @@ export const ActionBar = ({
     const newSelectedRows = new Set(selectedRows);
 
     data.forEach((item, index) => {
-      if (item.status === 'available') {
+      if (item.status === Status.AVAILABLE) {
         newSelectedRows.add(index);
       }
     });
@@ -76,13 +76,11 @@ export const ActionBar = ({
 
   return (
     <div className="action-bar">
-      <label htmlFor="select-all">
+      <label>
         <input
-          id="select-all"
           className="action-bar__checkbox"
           data-testid="select-all"
           type="checkbox"
-          name="select-all"
           checked={selectAll === true}
           onChange={handleSelectAll}
           ref={(el) => {

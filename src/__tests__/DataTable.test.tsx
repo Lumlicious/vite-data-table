@@ -1,6 +1,36 @@
 import { describe, it, expect, vi } from 'vitest';
 import { fireEvent, render, screen } from '@testing-library/react';
-import DataTable, { ITableData } from './DataTable';
+import DataTable, {
+  IHeaderCell,
+  ITableData,
+} from '../components/data-table/DataTable';
+
+const header: IHeaderCell[] = [
+  {
+    id: 'checkbox',
+    label: '',
+  },
+  {
+    id: 'name',
+    label: 'Name',
+  },
+  {
+    id: 'device',
+    label: 'Device',
+  },
+  {
+    id: 'path',
+    label: 'Path',
+  },
+  {
+    id: 'status-icon',
+    label: '',
+  },
+  {
+    id: 'status',
+    label: 'Status',
+  },
+];
 
 describe('render', () => {
   it('renders the data table component with the correct data', () => {
@@ -18,7 +48,7 @@ describe('render', () => {
         status: 'available',
       },
     ];
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     expect(true).toBeTruthy();
   });
 });
@@ -33,7 +63,7 @@ describe('Row selection', () => {
         status: 'available',
       },
     ];
-    const { container } = render(<DataTable data={data} />);
+    const { container } = render(<DataTable data={data} header={header} />);
     const counter = await container.getElementsByClassName(
       'action-bar__selected'
     );
@@ -67,7 +97,7 @@ describe('Row selection', () => {
         status: 'available',
       },
     ];
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
 
     expect(checkboxes[1]).toHaveAttribute('disabled');
@@ -92,7 +122,7 @@ describe('Select All', () => {
   ];
 
   it('should be unselected if no items are selected', async () => {
-    const { getByTestId } = render(<DataTable data={data} />);
+    const { getByTestId } = render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = getByTestId('select-all');
 
@@ -104,7 +134,7 @@ describe('Select All', () => {
   });
 
   it('should be indeterminate if some of the checkboxes are checked', async () => {
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
@@ -116,7 +146,7 @@ describe('Select All', () => {
   });
 
   it('should be checked if all inputs are selected', async () => {
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
@@ -132,7 +162,7 @@ describe('Select All', () => {
   });
 
   it('should select all items if none are selected when clicked', async () => {
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
@@ -144,7 +174,7 @@ describe('Select All', () => {
   });
 
   it('should select all items if some are selected when clicked', async () => {
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
@@ -158,7 +188,7 @@ describe('Select All', () => {
   });
 
   it('should de-select all items if all are currently selected when clicked', async () => {
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const selectAll = checkboxes[0] as HTMLInputElement;
 
@@ -168,6 +198,40 @@ describe('Select All', () => {
     expect(selectAll).toBeChecked();
 
     await fireEvent.click(checkboxes[0]);
+
+    expect(checkboxes[1]).not.toBeChecked();
+    expect(checkboxes[2]).not.toBeChecked();
+  });
+
+  it('should remove all selections if clicked in indeterminate mode and not all rows are selectable', async () => {
+    const data: ITableData[] = [
+      {
+        name: 'smss.exe',
+        device: 'Mario',
+        path: '\\Device\\HarddiskVolume2\\Windows\\System32\\smss.exe',
+        status: 'available',
+      },
+      {
+        name: 'netsh.exe',
+        device: 'Luigi',
+        path: '\\Device\\HarddiskVolume2\\Windows\\System32\\netsh.exe',
+        status: 'not-available',
+      },
+    ];
+
+    render(<DataTable data={data} header={header} />);
+    const checkboxes = screen.getAllByRole('checkbox');
+    const selectAll = checkboxes[0] as HTMLInputElement;
+
+    expect(selectAll.indeterminate).toBe(false);
+
+    await fireEvent.click(selectAll);
+
+    expect(selectAll.indeterminate).toBe(true);
+
+    await fireEvent.click(selectAll);
+
+    expect(selectAll.indeterminate).toBe(false);
 
     expect(checkboxes[1]).not.toBeChecked();
     expect(checkboxes[2]).not.toBeChecked();
@@ -191,14 +255,14 @@ describe('download', () => {
   ];
 
   it('should be disabled if no rows are selected', () => {
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     const downloadButton = screen.getByRole('button');
 
     expect(downloadButton).toHaveAttribute('disabled');
   });
 
   it('should be enabled if at least 1 row is selected', async () => {
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const downloadButton = screen.getByRole('button');
 
@@ -209,7 +273,7 @@ describe('download', () => {
 
   it('should display alert with device and path for all selected when clicked', async () => {
     const alertMock = vi.spyOn(window, 'alert');
-    render(<DataTable data={data} />);
+    render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');
     const downloadButton = screen.getByRole('button');
 
