@@ -211,7 +211,7 @@ describe('Select All', () => {
         name: 'netsh.exe',
         device: 'Luigi',
         path: '\\Device\\HarddiskVolume2\\Windows\\System32\\netsh.exe',
-        status: 'not-available',
+        status: 'scheduled',
       },
     ];
 
