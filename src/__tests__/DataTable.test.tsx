@@ -268,6 +268,7 @@ describe('download', () => {
   });
 
   it('should display alert with device and path for all selected when clicked', () => {
+    window.alert = vi.fn();
     const alertMock = vi.spyOn(window, 'alert');
     render(<DataTable data={data} header={header} />);
     const checkboxes = screen.getAllByRole('checkbox');

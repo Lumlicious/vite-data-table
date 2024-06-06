@@ -1,15 +1,18 @@
 # Data Table Challenge
 
+[Vercel Preview](https://vite-data-table.vercel.app/)
+
 ## Tech Stack
 
 - Vite
 - React (18.2)
 - Typescript
-- SCSS
+- SCSS + BEM
 - Vitest / React Testing Library
 - V8 coverage (100% for the component)
 - eslint (js, react, jsx, typescript rules)
 - Prettier
+- Vercel (preview deployment)
 
 ## Instructions
 
